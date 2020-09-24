@@ -1,0 +1,8 @@
+include MANIFEST.in
+include README.md
+include LICENSE.md
+include example.py
+recursive-include dat *.*
+recursive-include img *.*
+recursive-include msh *.*
+recursive-include inpoly *.*

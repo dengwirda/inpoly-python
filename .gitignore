@@ -1,0 +1,14 @@
+# python things
+__pycache__/
+*.py[cod]
+
+build/
+develop-eggs/
+dist/
+eggs/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
