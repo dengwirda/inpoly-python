@@ -76,7 +76,7 @@ def inpoly2(vert, node, edge=None, ftol=5.0e-14):
         edge[ -1, 0] = node.shape[0] - 1
 
     else:
-        edge = np.asarray(edge)
+        edge = np.asarray(edge, dtype=np.int32)
 
     STAT = np.full(
         vert.shape[0], False, dtype=np.bool_)
