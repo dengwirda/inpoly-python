@@ -1,4 +1,6 @@
 
+#-- snipped from: github.com/dengwirda/jigsaw-python
+
 """ MSH_T: Container struct. for JIGSAW's mesh data.
 
     .IF. MESH.MSHID == 'EUCLIDEAN-MESH':

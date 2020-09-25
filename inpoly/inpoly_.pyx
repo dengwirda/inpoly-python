@@ -1,8 +1,10 @@
 
+import time
 import numpy as np
 cimport numpy as np
-
-
+cimport cython
+@cython.boundscheck(False)  # deactivate bnds checking
+@cython.wraparound(False)   # deactivate -.ve indexing
 def _inpoly(np.ndarray[double, ndim=+2] vert,
             np.ndarray[double, ndim=+2] node,
             np.ndarray[int, ndim=2] edge, ftol, lbar):
@@ -11,6 +13,10 @@ def _inpoly(np.ndarray[double, ndim=+2] vert,
     test. Loop over edges; do a binary-search for the first
     vertex that intersects with the edge y-range; crossing-
     number comparisons; break when the local y-range is met.
+
+    Updated: 25 September, 2020
+
+    Authors: Darren Engwirda, Keith Roberts
 
     """
     cdef size_t epos, jpos, inod, jnod
@@ -23,21 +29,17 @@ def _inpoly(np.ndarray[double, ndim=+2] vert,
     veps = ftol * (lbar ** +1)
 
     cdef np.ndarray[np.int8_t] stat = np.full(
-        vert.shape[0], 0, dtype=np.int8)
+        vert.shape[0], +0, dtype=np.int8)
 
     cdef np.ndarray[np.int8_t] bnds = np.full(
-        vert.shape[0], 0, dtype=np.int8)
+        vert.shape[0], +0, dtype=np.int8)
 
 #----------------------------------- compute y-range overlap
     YMIN = node[edge[:, 0], 1] - veps
-    YMAX = node[edge[:, 1], 1] + veps
-
+   
     cdef np.ndarray[long] HEAD = \
         np.searchsorted(vert[:, 1], YMIN, "left" )
-
-    cdef np.ndarray[long] TAIL = \
-        np.searchsorted(vert[:, 1], YMAX, "right")
-
+    
 #----------------------------------- loop over polygon edges
     for epos in range(edge.shape[0]):
 
@@ -49,20 +51,24 @@ def _inpoly(np.ndarray[double, ndim=+2] vert,
         yone = node[inod, 1]
         ytwo = node[jnod, 1]
 
-        xmin = min(xone, xtwo)
+        xmin = min(xone, xtwo)          # compute edge bbox
         xmax = max(xone, xtwo)
 
         xmax = xmax + veps
+        ymax = ytwo + veps
+
         xdel = xtwo - xone
         ydel = ytwo - yone
 
     #------------------------------- calc. edge-intersection
-        for jpos in range(HEAD[epos], TAIL[epos]):
+        for jpos in range(HEAD[epos], vert.shape[0]):
 
             if bnds[jpos]: continue
 
             xpos = vert[jpos, 0]
             ypos = vert[jpos, 1]
+
+            if ypos >= ymax: break      # due to the y-sort
 
             if xpos >= xmin:
                 if xpos <= xmax:

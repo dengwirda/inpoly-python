@@ -56,27 +56,28 @@ def inpoly2(vert, node, edge=None, ftol=5.0e-14):
     of calls to the (relatively) expensive edge intersection
     test.
 
-    Updated: 23 September, 2020
+    Updated: 25 September, 2020
 
     Authors: Darren Engwirda, Keith Roberts
 
     """
 
-    vert = np.asarray(vert)
-    node = np.asarray(node)
+    vert = np.asarray(vert, dtype=np.float64)
+    node = np.asarray(node, dtype=np.float64)
 
     if edge is None:
 #----------------------------------- set edges if not passed
         indx = np.arange(0, node.shape[0] - 1)
 
         edge = np.zeros((
-            node.shape[0], 2), dtype=np.int32)
+            node.shape[0], +2), dtype=np.int32)
+
         edge[:-1, 0] = indx + 0
         edge[:-1, 1] = indx + 1
         edge[ -1, 0] = node.shape[0] - 1
 
     else:
-        edge = np.asarray(edge)
+        edge = np.asarray(edge, dtype=np.int32)
 
     STAT = np.full(
         vert.shape[0], False, dtype=np.bool_)

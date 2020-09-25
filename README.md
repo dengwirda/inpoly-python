@@ -20,6 +20,15 @@ This implementation seeks to improve these bounds. Query points are sorted by `y
     python3 example.py --IDnumber=2
     python3 example.py --IDnumber=3
 
+### `Fast kernels`
+
+`INPOLY` relies on `Cython` to compile the core "inpolygon" tests into a fast kernel. `inpoly_.pyx` contains the human-readable `Cython` implementation, `inpoly_.c` is the auto-generated output. For a full build:
+
+    python3 setup.py build_ext --inplace
+    python3 setup.py install
+
+These steps should "compile" the `Cython` kernel `inpoly_.pyx` into the `Python`-compatible `c`-code `inpoly_.c`, which can then be compiled into the binary lib `inpoly_.so[dll|dylib]`.
+
 ### `License Terms`
 
 This program may be freely redistributed under the condition that the copyright notices (including this entire header) are not removed, and no compensation is received through use of the software.  Private, research, and institutional use is free.  You may distribute modified versions of this code `UNDER THE CONDITION THAT THIS CODE AND ANY MODIFICATIONS MADE TO IT IN THE SAME FILE REMAIN UNDER COPYRIGHT OF THE ORIGINAL AUTHOR, BOTH SOURCE AND OBJECT CODE ARE MADE FREELY AVAILABLE WITHOUT CHARGE, AND CLEAR NOTICE IS GIVEN OF THE MODIFICATIONS`. Distribution of this code as part of a commercial system is permissible `ONLY BY DIRECT ARRANGEMENT WITH THE AUTHOR`. (If you are not directly supplying this code to a customer, and you are instead telling them how they can obtain it for free, then you are not required to make any arrangement with me.) 
