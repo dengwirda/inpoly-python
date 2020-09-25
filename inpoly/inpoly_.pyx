@@ -37,7 +37,7 @@ def _inpoly(np.ndarray[double, ndim=+2] vert,
 #----------------------------------- compute y-range overlap
     YMIN = node[edge[:, 0], 1] - veps
    
-    cdef np.ndarray[long] HEAD = \
+    cdef np.ndarray[Py_ssize_t] HEAD = \
         np.searchsorted(vert[:, 1], YMIN, "left" )
     
 #----------------------------------- loop over polygon edges

@@ -11,21 +11,26 @@ import numpy as np
 # https://stackoverflow.com/questions/14657375/
 #   cython-fatal-error-numpy-arrayobject-h-no-such-file-or-directory
 
+# https://github.com/cython/cython/issues/1480
+
+# https://stackoverflow.com/questions/14372706/
+#   visual-studio-cant-build-due-to-rc-exe
+
 EXT_MODULES = []
-INCLUDE_DIR = []
 
 try:
     from Cython.Build import cythonize
-
     EXT_MODULES += cythonize(
-        os.path.join("inpoly", "inpoly_.pyx"))
+        Extension("inpoly.inpoly_",
+            sources=[os.path.join("inpoly", "inpoly_.pyx")], 
+            include_dirs=[np.get_include()])
+    )
 
-    INCLUDE_DIR += [np.get_include()]
-    
 except ImportError:
     EXT_MODULES += [
-        Extension("inpoly.inpoly_", [
-            os.path.join("inpoly", "inpoly_.c")]),
+        Extension("inpoly.inpoly_",
+            sources=[os.path.join("inpoly", "inpoly_.c")],
+            include_dirs=[np.get_include()])
     ]
 
 NAME = "inpoly"
@@ -78,7 +83,6 @@ setup(
     url=URL,
     packages=find_packages(),
     ext_modules=EXT_MODULES,
-    include_dirs=INCLUDE_DIR,
     install_requires=REQUIRED,
     classifiers=CLASSIFY
 )

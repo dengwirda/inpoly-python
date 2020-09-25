@@ -3,7 +3,13 @@
 /* BEGIN: Cython Metadata
 {
     "distutils": {
-        "depends": [],
+        "depends": [
+            "/home/dengwirda/.local/lib/python3.6/site-packages/numpy/core/include/numpy/arrayobject.h",
+            "/home/dengwirda/.local/lib/python3.6/site-packages/numpy/core/include/numpy/ufuncobject.h"
+        ],
+        "include_dirs": [
+            "/home/dengwirda/.local/lib/python3.6/site-packages/numpy/core/include"
+        ],
         "name": "inpoly.inpoly_",
         "sources": [
             "inpoly/inpoly_.pyx"
@@ -1515,9 +1521,6 @@ typedef struct {
 /* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_Py_intptr_t(Py_intptr_t value);
 
-/* CIntToPy.proto */
-static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value);
-
 /* RealImag.proto */
 #if CYTHON_CCOMPLEX
   #ifdef __cplusplus
@@ -1619,6 +1622,9 @@ static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value);
 /* CIntFromPy.proto */
 static CYTHON_INLINE size_t __Pyx_PyInt_As_size_t(PyObject *);
 
+/* CIntToPy.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value);
+
 /* CIntFromPy.proto */
 static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *);
 
@@ -1679,7 +1685,7 @@ static PyTypeObject *__pyx_ptype_5numpy_ufunc = 0;
 static __Pyx_TypeInfo __Pyx_TypeInfo_double = { "double", NULL, sizeof(double), { 0 }, 0, 'R', 0, 0 };
 static __Pyx_TypeInfo __Pyx_TypeInfo_int = { "int", NULL, sizeof(int), { 0 }, 0, IS_UNSIGNED(int) ? 'U' : 'I', IS_UNSIGNED(int), 0 };
 static __Pyx_TypeInfo __Pyx_TypeInfo_nn___pyx_t_5numpy_int8_t = { "int8_t", NULL, sizeof(__pyx_t_5numpy_int8_t), { 0 }, 0, IS_UNSIGNED(__pyx_t_5numpy_int8_t) ? 'U' : 'I', IS_UNSIGNED(__pyx_t_5numpy_int8_t), 0 };
-static __Pyx_TypeInfo __Pyx_TypeInfo_long = { "long", NULL, sizeof(long), { 0 }, 0, IS_UNSIGNED(long) ? 'U' : 'I', IS_UNSIGNED(long), 0 };
+static __Pyx_TypeInfo __Pyx_TypeInfo_Py_ssize_t = { "Py_ssize_t", NULL, sizeof(Py_ssize_t), { 0 }, 0, IS_UNSIGNED(Py_ssize_t) ? 'U' : 'I', IS_UNSIGNED(Py_ssize_t), 0 };
 #define __Pyx_MODULE_NAME "inpoly.inpoly_"
 extern int __pyx_module_is_main_inpoly__inpoly_;
 int __pyx_module_is_main_inpoly__inpoly_ = 0;
@@ -2219,7 +2225,7 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
  * #----------------------------------- compute y-range overlap
  *     YMIN = node[edge[:, 0], 1] - veps             # <<<<<<<<<<<<<<
  * 
- *     cdef np.ndarray[long] HEAD = \
+ *     cdef np.ndarray[Py_ssize_t] HEAD = \
  */
   __pyx_t_5 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_v_edge), __pyx_tuple__2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 38, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
@@ -2245,7 +2251,7 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
 
   /* "inpoly/inpoly_.pyx":41
  * 
- *     cdef np.ndarray[long] HEAD = \
+ *     cdef np.ndarray[Py_ssize_t] HEAD = \
  *         np.searchsorted(vert[:, 1], YMIN, "left" )             # <<<<<<<<<<<<<<
  * 
  * #----------------------------------- loop over polygon edges
@@ -2311,7 +2317,7 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
   __pyx_t_10 = ((PyArrayObject *)__pyx_t_4);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_HEAD.rcbuffer->pybuffer, (PyObject*)__pyx_t_10, &__Pyx_TypeInfo_long, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_HEAD.rcbuffer->pybuffer, (PyObject*)__pyx_t_10, &__Pyx_TypeInfo_Py_ssize_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
       __pyx_v_HEAD = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_HEAD.rcbuffer->pybuffer.buf = NULL;
       __PYX_ERR(0, 40, __pyx_L1_error)
     } else {__pyx_pybuffernd_HEAD.diminfo[0].strides = __pyx_pybuffernd_HEAD.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_HEAD.diminfo[0].shape = __pyx_pybuffernd_HEAD.rcbuffer->pybuffer.shape[0];
@@ -2477,7 +2483,7 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
     __pyx_t_18 = (__pyx_v_vert->dimensions[0]);
     __pyx_t_14 = __pyx_v_epos;
     __pyx_t_19 = __pyx_t_18;
-    for (__pyx_t_20 = (*__Pyx_BufPtrStrided1d(long *, __pyx_pybuffernd_HEAD.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_HEAD.diminfo[0].strides)); __pyx_t_20 < __pyx_t_19; __pyx_t_20+=1) {
+    for (__pyx_t_20 = (*__Pyx_BufPtrStrided1d(Py_ssize_t *, __pyx_pybuffernd_HEAD.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_HEAD.diminfo[0].strides)); __pyx_t_20 < __pyx_t_19; __pyx_t_20+=1) {
       __pyx_v_jpos = __pyx_t_20;
 
       /* "inpoly/inpoly_.pyx":66
@@ -3845,7 +3851,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * #----------------------------------- compute y-range overlap
  *     YMIN = node[edge[:, 0], 1] - veps             # <<<<<<<<<<<<<<
  * 
- *     cdef np.ndarray[long] HEAD = \
+ *     cdef np.ndarray[Py_ssize_t] HEAD = \
  */
   __pyx_slice_ = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice_)) __PYX_ERR(0, 38, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_slice_);
@@ -3856,7 +3862,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
 
   /* "inpoly/inpoly_.pyx":41
  * 
- *     cdef np.ndarray[long] HEAD = \
+ *     cdef np.ndarray[Py_ssize_t] HEAD = \
  *         np.searchsorted(vert[:, 1], YMIN, "left" )             # <<<<<<<<<<<<<<
  * 
  * #----------------------------------- loop over polygon edges
@@ -6156,37 +6162,6 @@ static void __Pyx_ReleaseBuffer(Py_buffer *view) {
         return (target_type) value;\
     }
 
-/* CIntToPy */
-  static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value) {
-    const long neg_one = (long) ((long) 0 - (long) 1), const_zero = (long) 0;
-    const int is_unsigned = neg_one > const_zero;
-    if (is_unsigned) {
-        if (sizeof(long) < sizeof(long)) {
-            return PyInt_FromLong((long) value);
-        } else if (sizeof(long) <= sizeof(unsigned long)) {
-            return PyLong_FromUnsignedLong((unsigned long) value);
-#ifdef HAVE_LONG_LONG
-        } else if (sizeof(long) <= sizeof(unsigned PY_LONG_LONG)) {
-            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
-#endif
-        }
-    } else {
-        if (sizeof(long) <= sizeof(long)) {
-            return PyInt_FromLong((long) value);
-#ifdef HAVE_LONG_LONG
-        } else if (sizeof(long) <= sizeof(PY_LONG_LONG)) {
-            return PyLong_FromLongLong((PY_LONG_LONG) value);
-#endif
-        }
-    }
-    {
-        int one = 1; int little = (int)*(unsigned char *)&one;
-        unsigned char *bytes = (unsigned char *)&value;
-        return _PyLong_FromByteArray(bytes, sizeof(long),
-                                     little, !is_unsigned);
-    }
-}
-
 /* Declarations */
   #if CYTHON_CCOMPLEX
   #ifdef __cplusplus
@@ -6682,6 +6657,37 @@ raise_neg_overflow:
     PyErr_SetString(PyExc_OverflowError,
         "can't convert negative value to size_t");
     return (size_t) -1;
+}
+
+/* CIntToPy */
+  static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value) {
+    const long neg_one = (long) ((long) 0 - (long) 1), const_zero = (long) 0;
+    const int is_unsigned = neg_one > const_zero;
+    if (is_unsigned) {
+        if (sizeof(long) < sizeof(long)) {
+            return PyInt_FromLong((long) value);
+        } else if (sizeof(long) <= sizeof(unsigned long)) {
+            return PyLong_FromUnsignedLong((unsigned long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(long) <= sizeof(unsigned PY_LONG_LONG)) {
+            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
+#endif
+        }
+    } else {
+        if (sizeof(long) <= sizeof(long)) {
+            return PyInt_FromLong((long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(long) <= sizeof(PY_LONG_LONG)) {
+            return PyLong_FromLongLong((PY_LONG_LONG) value);
+#endif
+        }
+    }
+    {
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        unsigned char *bytes = (unsigned char *)&value;
+        return _PyLong_FromByteArray(bytes, sizeof(long),
+                                     little, !is_unsigned);
+    }
 }
 
 /* CIntFromPy */

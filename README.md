@@ -27,7 +27,7 @@ This implementation seeks to improve these bounds. Query points are sorted by `y
     python3 setup.py build_ext --inplace
     python3 setup.py install
 
-These steps should "compile" the `Cython` kernel `inpoly_.pyx` into the `Python`-compatible `c`-code `inpoly_.c`, which can then be compiled into the binary lib `inpoly_.so[dll|dylib]`.
+These steps should "compile" the `Cython` kernel `inpoly_.pyx` into the `Python`-compatible `c`-code `inpoly_.c`, which can then be compiled into the binary lib `inpoly_.so[pyd|dylib]`.
 
 ### `License Terms`
 
