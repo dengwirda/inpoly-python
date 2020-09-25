@@ -174,7 +174,7 @@ def _inpoly(vert, node, edge, ftol, lbar):
         yone = YONE[epos]; ytwo = YTWO[epos]
 
         xmin = XMIN[epos]; xmax = XMAX[epos]
-        
+
         xdel = XDEL[epos]; ydel = YDEL[epos]
 
     #------------------------------- calc. edge-intersection
@@ -191,7 +191,7 @@ def _inpoly(vert, node, edge, ftol, lbar):
                     mul1 = ydel * (xpos - xone)
                     mul2 = xdel * (ypos - yone)
 
-                    if feps >= np.abs(mul2 - mul1):
+                    if feps >= abs(mul2 - mul1):
                 #------------------- BNDS -- approx. on edge
                         bnds[jpos] = True
                         stat[jpos] = True
@@ -216,3 +216,12 @@ def _inpoly(vert, node, edge, ftol, lbar):
                 stat[jpos] = not stat[jpos]
 
     return stat, bnds
+
+
+try:
+#-- automagically "override" _inpoly with a compiled kernel!
+    from inpoly.inpoly_ import _inpoly
+
+except ImportError:
+#-- if it hasn't been built, just stick with the .py version
+    pass

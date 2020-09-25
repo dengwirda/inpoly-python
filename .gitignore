@@ -2,6 +2,10 @@
 __pycache__/
 *.py[cod]
 
+*.so
+*.dylib
+*.dll
+
 build/
 develop-eggs/
 dist/

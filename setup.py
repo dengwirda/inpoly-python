@@ -2,14 +2,32 @@
 import io
 import os
 from setuptools import setup, find_packages
+from setuptools.extension import Extension
+
+# https://stackoverflow.com/questions/4505747/
+#   how-should-i-structure-a-python-package-that-contains-cython-code
+
+EXT_MODULES = []
+
+try:
+    from Cython.Build import cythonize
+
+    EXT_MODULES += cythonize(
+        os.path.join("inpoly", "inpoly_.pyx"))
+    
+except ImportError:
+    EXT_MODULES += [
+        Extension("inpoly.inpoly_", [
+            os.path.join("inpoly", "inpoly_.c")]),
+    ]
 
 NAME = "inpoly"
 DESCRIPTION = "Fast point(s)-in-polygon queries."
 AUTHOR = "Darren Engwirda and Keith Roberts"
 AUTHOR_EMAIL = "d.engwirda@gmail.com; krober@usp.br"
 URL = "https://github.com/dengwirda/"
-VERSION = "0.1.0"
-REQUIRES_PYTHON = ">=3.1.0"
+VERSION = "0.1.1"
+REQUIRES_PYTHON = ">=3.3.0"
 KEYWORDS = "Point-in-Polygon Geometry GIS"
 
 REQUIRED = [
@@ -52,6 +70,7 @@ setup(
     keywords=KEYWORDS,
     url=URL,
     packages=find_packages(),
+    ext_modules=EXT_MODULES,
     install_requires=REQUIRED,
     classifiers=CLASSIFY
 )
