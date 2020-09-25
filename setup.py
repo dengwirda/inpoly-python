@@ -3,17 +3,24 @@ import io
 import os
 from setuptools import setup, find_packages
 from setuptools.extension import Extension
+import numpy as np
 
 # https://stackoverflow.com/questions/4505747/
 #   how-should-i-structure-a-python-package-that-contains-cython-code
 
+# https://stackoverflow.com/questions/14657375/
+#   cython-fatal-error-numpy-arrayobject-h-no-such-file-or-directory
+
 EXT_MODULES = []
+INCLUDE_DIR = []
 
 try:
     from Cython.Build import cythonize
 
     EXT_MODULES += cythonize(
         os.path.join("inpoly", "inpoly_.pyx"))
+
+    INCLUDE_DIR += [np.get_include()]
     
 except ImportError:
     EXT_MODULES += [
@@ -71,6 +78,7 @@ setup(
     url=URL,
     packages=find_packages(),
     ext_modules=EXT_MODULES,
+    include_dirs=INCLUDE_DIR,
     install_requires=REQUIRED,
     classifiers=CLASSIFY
 )
