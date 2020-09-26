@@ -104,7 +104,7 @@ def ex_3():
         0.5 * node[edge[:, 1], :]
     )
 
-    rpts = np.random.rand(250000, 2)
+    rpts = np.random.rand(25000, 2)
 
     nmax = np.max(node, axis=0)
     nmin = np.min(node, axis=0)

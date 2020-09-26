@@ -92,16 +92,15 @@ def inpoly2(vert, node, edge=None, ftol=5.0e-14):
         vert[:, 1] <= np.nanmax(node[:, 1]))
     )
 
-    vert = vert[mask, :]
+    vert = vert[mask]
 
 #------------------ flip to ensure y-axis is the `long` axis
-    vmin = np.amin(vert, axis=0)
-    vmax = np.amax(vert, axis=0)
-    ddxy = vmax - vmin
+    xdel = np.amax(vert[:, 0]) - np.amin(vert[:, 0])
+    ydel = np.amax(vert[:, 1]) - np.amin(vert[:, 1])
 
-    lbar = np.sum(ddxy) / 2.0
+    lbar = (xdel + ydel) / 2.0
 
-    if ddxy[0] > ddxy[1]:
+    if (xdel > ydel):
         vert = vert[:, (1, 0)]
         node = node[:, (1, 0)]
 
@@ -110,7 +109,7 @@ def inpoly2(vert, node, edge=None, ftol=5.0e-14):
     temp = edge[swap]
     edge[swap, :] = temp[:, (1, 0)]
 
-    ivec = np.argsort(vert[:, 1])
+    ivec = np.argsort(vert[:, 1], kind="quicksort")
     vert = vert[ivec]
 
 #----------------------------------- call crossing-no kernel
@@ -207,8 +206,8 @@ def _inpoly(vert, node, edge, ftol, lbar):
                         bnds[jpos] = True
                         stat[jpos] = True
 
-                    elif (mul1 < mul2) and \
-                        (ypos >= yone) and (ypos < ytwo):
+                    elif (mul1 <= mul2) and (ypos >= yone) \
+                            and (ypos < ytwo):
                 #------------------- advance crossing number
                         stat[jpos] = not stat[jpos]
 
@@ -221,7 +220,7 @@ def _inpoly(vert, node, edge, ftol, lbar):
 
 try:
 #-- automagically "override" _inpoly with a compiled kernel!
-    from inpoly.inpoly_ import _inpoly
+    from inpoly.inpoly_ import _inpoly  # noqa
 
 except ImportError:
 #-- if it hasn't been built, just stick with the .py version

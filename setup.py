@@ -20,17 +20,17 @@ EXT_MODULES = []
 
 try:
     from Cython.Build import cythonize
-    EXT_MODULES += cythonize(
-        Extension("inpoly.inpoly_",
-            sources=[os.path.join("inpoly", "inpoly_.pyx")], 
-            include_dirs=[np.get_include()])
+    EXT_MODULES += cythonize(Extension(
+        "inpoly.inpoly_",
+        sources=[os.path.join("inpoly", "inpoly_.pyx")],
+        include_dirs=[np.get_include()])
     )
 
 except ImportError:
-    EXT_MODULES += [
-        Extension("inpoly.inpoly_",
-            sources=[os.path.join("inpoly", "inpoly_.c")],
-            include_dirs=[np.get_include()])
+    EXT_MODULES += [Extension(
+        "inpoly.inpoly_",
+        sources=[os.path.join("inpoly", "inpoly_.c")],
+        include_dirs=[np.get_include()])
     ]
 
 NAME = "inpoly"

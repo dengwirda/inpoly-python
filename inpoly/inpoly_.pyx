@@ -1,5 +1,4 @@
 
-import time
 import numpy as np
 cimport numpy as np
 cimport cython
@@ -7,7 +6,7 @@ cimport cython
 @cython.wraparound(False)   # deactivate -.ve indexing
 def _inpoly(np.ndarray[double, ndim=+2] vert,
             np.ndarray[double, ndim=+2] node,
-            np.ndarray[int, ndim=2] edge, ftol, lbar):
+    np.ndarray[np.int32_t, ndim=+2] edge, ftol, lbar):
     """
     _INPOLY: the local cython version of the crossing-number
     test. Loop over edges; do a binary-search for the first
@@ -36,10 +35,10 @@ def _inpoly(np.ndarray[double, ndim=+2] vert,
 
 #----------------------------------- compute y-range overlap
     YMIN = node[edge[:, 0], 1] - veps
-   
+
     cdef np.ndarray[Py_ssize_t] HEAD = \
         np.searchsorted(vert[:, 1], YMIN, "left" )
-    
+
 #----------------------------------- loop over polygon edges
     for epos in range(edge.shape[0]):
 
@@ -91,8 +90,8 @@ def _inpoly(np.ndarray[double, ndim=+2] vert,
                         bnds[jpos] = 1
                         stat[jpos] = 1
 
-                    elif (mul1 < mul2) and \
-                        (ypos >= yone) and (ypos < ytwo):
+                    elif (mul1 <= mul2) and (ypos >= yone) \
+                            and (ypos < ytwo):
                 #------------------- advance crossing number
                         stat[jpos] = 1 - stat[jpos]
 
