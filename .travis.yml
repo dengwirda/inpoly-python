@@ -10,11 +10,14 @@ jobs:
     - choco install python --version 3.8
     - export PATH="/c/Python38:/c/Python38/Scripts:$PATH"
     - ln -s /c/Python38/python.exe /c/Python38/python3.exe
+env:
+  global:
+    - CIBW_BEFORE_BUILD="pip install numpy"
 install:
 - python3 -m pip install --upgrade setuptools wheel
 - python3 -m pip install cibuildwheel==1.6.1
 script:
-- cibuildwheel --output-dir dist --before-all "pip install numpy"
+- cibuildwheel --output-dir dist
 deploy:
   provider: pypi
   username: __token__
