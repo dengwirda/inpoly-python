@@ -13,15 +13,15 @@ jobs:
 install:
 - python3 -m pip install numpy
 - python3 -m pip install --upgrade setuptools wheel
+- python3 -m pip install cibuildwheel==1.6.1
 script:
-- python3 setup.py sdist
-- python3 setup.py bdist_wheel
+- cibuildwheel --output-dir dist
 deploy:
   provider: pypi
   username: __token__
   password:
     secure: PXpdHcpbbzQdL8NTZSGVhRtoJTEawAuaBo03qizJSgGQKDDUFxuZDe6/0+D0U/fnITYvSXa73rrKs1CTsH9mi9trjqF/MIvreqeH17yUDN0IVMFBMLW/5oFp7qBiN7crixGHFJWhZ8P3Ycuf4kjtEQHyU5pugj8CsNlIW2F/wTlyj/z3H35MB9IkHlLG2HFJdynujXnK4rUC7lis8UN2Dj9WqSEoOT0io9jdra6Wp1SkrYXyf90G71QTQ3R0wMHJTXdPpsae2IsIpxRAO4qBZhDQSPZQM1LnpT7MQU9bJaDH04FDUzzGjoOIEYWmjBDI5z6mAn4k8ygBJlE0ZYx//KgevplDVLm1qcI71ygi8/t7MYWG0Ab1mNsp9vbW0m604Prz6yUHxIlPkM+Y/GhY4+q8zCj/IVes1mtcxwDFKB0pRxmywpClL9kCCFUk1TzaKaKOaNY7sfvxLRZYiXvpBYz2xlfFIpKvTAxD58u25qSF83FktL+LS6jA1aTx36Kh/r2BXV+baEwMaFYivy2oFMFa/6t8IzthpsO46sWpXhMQKVv+W93bjyJtkqpAN1WQgkCO81JJrBYzSaZu0bx7DJKRSNGgS/HOQaqX6R8uXLvpgFMLMfc5EtreOhicmVVYbjIAammAXfZsGiLsVEMzEqzbulr5Kl+lYjLRUvpMj8Q=
-  distributions: sdist bdist_wheel
+  distributions: clean_ext
   skip_existing: true
   on:
     tags: true
