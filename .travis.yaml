@@ -1,0 +1,34 @@
+language: python
+
+jobs:
+  include:
+    # a linux build
+    - services: docker
+    # a macOS build
+    - os: osx
+      language: shell
+    # and a windows build
+    - os: windows
+      language: shell
+      before_install:
+        - choco install python --version 3.8
+        - export PATH="\c\Python38:\c\Python38\Scripts:$PATH"
+        # ensure it's python3...
+        - ln -s \c\Python38\python.exe \c\Python38\python3.exe
+        
+env:
+  global:
+  - TWINE_USERNAME=dengwirda
+  
+install:
+  - python3 -m pip install cibuildwheel
+  
+script:
+  - python3 -m cibuildwheel --output-dir wheelhouse
+  
+  after_sucess:
+    - |
+      if [[ $TRAVIS_TAG ]]; then
+        python3 -m pip install twine
+        python3 -m twine upload wheelhouse/*.whl
+      fi
