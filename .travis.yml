@@ -1,38 +1,38 @@
 language: python
 jobs:
   include:
-    - name: "Linux py38"
+    - name: "Linux py35:py38"
+      services: docker
       sudo: required
       language: python
       python: 3.8
-      dist: xenial
-      services: docker
       env:
-        - CIBW_BUILD="cp38-*"
+        - CIBW_BUILD="cp35-* cp36-* cp37-* cp38-*"
 
-    - name: "MacOS py38"
+    - name: "MacOS py35:py38"
       os: osx
-      language: generic
-      python: 3.8
+      language: shell
       env:
-        - CIBW_BUILD="cp38-*"
+        - CIBW_BUILD="cp35-* cp36-* cp37-* cp38-*"
 
-    - name: "Win py38"
+    - name: "Windows py35:py38"
       os: windows
       language: shell
       before_install:
         - choco install python3 --version 3.8
       env:
         - PATH=/c/Python38:/c/Python38/Scripts:$PATH
-        - CIBW_BUILD="cp38-*"   
+        # make sure it's on PATH as 'python3'
+        - ln -s /c/Python38/python.exe /c/Python38/python3.exe
+        - CIBW_BUILD="cp35-* cp36-* cp37-* cp38-*"
 env:
   global:
     - CIBW_BEFORE_BUILD="pip install numpy"
 install:
-- python -m pip install --upgrade setuptools wheel
-- python -m pip install cibuildwheel==1.6.1
+- python3 -m pip install --upgrade setuptools wheel
+- python3 -m pip install cibuildwheel==1.6.1
 script:
-- python -m cibuildwheel --output-dir dist
+- python3 -m cibuildwheel --output-dir dist
 deploy:
   provider: pypi
   username: __token__
