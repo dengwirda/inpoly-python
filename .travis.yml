@@ -24,7 +24,9 @@ install:
   - python3 -m pip install numpy
   
 script:
-  - python3 -m setup.py bdist_wheel
+  - python3 -m pip install –upgrade pip
+  - python3 -m pip install --user --upgrade setuptools wheel
+  - python3 setup.py bdist_wheel
   
 after_sucess:
   - |
