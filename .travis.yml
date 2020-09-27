@@ -21,11 +21,10 @@ env:
   - TWINE_USERNAME=dengwirda
   
 install:
-  - python3 -m pip install cibuildwheel
+  - python3 -m pip install numpy
   
 script:
-  - python3 -m pip install numpy
-  - python3 -m cibuildwheel --output-dir wheelhouse
+  - python3 -m setup.py bdist_wheel
   
 after_sucess:
   - |
