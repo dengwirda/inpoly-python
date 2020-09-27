@@ -56,7 +56,7 @@ def inpoly2(vert, node, edge=None, ftol=5.0e-14):
     of calls to the (relatively) expensive edge intersection
     test.
 
-    Updated: 25 September, 2020
+    Updated: 26 September, 2020
 
     Authors: Darren Engwirda, Keith Roberts
 
@@ -109,22 +109,11 @@ def inpoly2(vert, node, edge=None, ftol=5.0e-14):
     temp = edge[swap]
     edge[swap, :] = temp[:, (1, 0)]
 
-    ivec = np.argsort(vert[:, 1], kind="quicksort")
-    vert = vert[ivec]
-
 #----------------------------------- call crossing-no kernel
-    stmp, btmp = \
+    stat, bnds = \
         _inpoly(vert, node, edge, ftol, lbar)
 
 #----------------------------------- unpack array reindexing
-    stat = np.full(
-        vert.shape[0], False, dtype=np.bool_)
-    bnds = np.full(
-        vert.shape[0], False, dtype=np.bool_)
-
-    stat[ivec] = stmp
-    bnds[ivec] = btmp
-
     STAT[mask] = stat
     BNDS[mask] = bnds
 
@@ -149,6 +138,8 @@ def _inpoly(vert, node, edge, ftol, lbar):
         vert.shape[0], False, dtype=np.bool_)
 
 #----------------------------------- compute y-range overlap
+    ivec = np.argsort(vert[:, 1], kind="quicksort")
+
     XONE = node[edge[:, 0], 0]
     XTWO = node[edge[:, 1], 0]
     YONE = node[edge[:, 0], 1]
@@ -164,8 +155,10 @@ def _inpoly(vert, node, edge, ftol, lbar):
     YDEL = YTWO - YONE
     XDEL = XTWO - XONE
 
-    ione = np.searchsorted(vert[:, 1], YMIN, "left")
-    itwo = np.searchsorted(vert[:, 1], YMAX, "right")
+    ione = np.searchsorted(
+        vert[:, 1], YMIN,  "left", sorter=ivec)
+    itwo = np.searchsorted(
+        vert[:, 1], YMAX, "right", sorter=ivec)
 
 #----------------------------------- loop over polygon edges
     for epos in range(edge.shape[0]):
@@ -180,10 +173,12 @@ def _inpoly(vert, node, edge, ftol, lbar):
     #------------------------------- calc. edge-intersection
         for jpos in range(ione[epos], itwo[epos]):
 
-            if bnds[jpos]: continue
+            jvrt = ivec[jpos]
 
-            xpos = vert[jpos, 0]
-            ypos = vert[jpos, 1]
+            if bnds[jvrt]: continue
+
+            xpos = vert[jvrt, 0]
+            ypos = vert[jvrt, 1]
 
             if xpos >= xmin:
                 if xpos <= xmax:
@@ -193,27 +188,27 @@ def _inpoly(vert, node, edge, ftol, lbar):
 
                     if feps >= abs(mul2 - mul1):
                 #------------------- BNDS -- approx. on edge
-                        bnds[jpos] = True
-                        stat[jpos] = True
+                        bnds[jvrt] = True
+                        stat[jvrt] = True
 
                     elif (ypos == yone) and (xpos == xone):
                 #------------------- BNDS -- match about ONE
-                        bnds[jpos] = True
-                        stat[jpos] = True
+                        bnds[jvrt] = True
+                        stat[jvrt] = True
 
                     elif (ypos == ytwo) and (xpos == xtwo):
                 #------------------- BNDS -- match about TWO
-                        bnds[jpos] = True
-                        stat[jpos] = True
+                        bnds[jvrt] = True
+                        stat[jvrt] = True
 
                     elif (mul1 <= mul2) and (ypos >= yone) \
                             and (ypos < ytwo):
                 #------------------- advance crossing number
-                        stat[jpos] = not stat[jpos]
+                        stat[jvrt] = not stat[jvrt]
 
             elif (ypos >= yone) and (ypos < ytwo):
             #----------------------- advance crossing number
-                stat[jpos] = not stat[jpos]
+                stat[jvrt] = not stat[jvrt]
 
     return stat, bnds
 

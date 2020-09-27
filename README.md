@@ -20,6 +20,16 @@ This implementation seeks to improve these bounds. Query points are sorted by `y
     python3 example.py --IDnumber=2
     python3 example.py --IDnumber=3
 
+### `Demo problems`
+
+The following set of example problems are available in `example.py`: 
+
+    example: 1 # a simple box-type geometry to get started
+    example: 2 # random queries using a common geographic dataset
+    example: 3 # speed test vs existing inpolygon implementations
+
+Run `python3 example.py --IDnumber=N` to call the `N-th` example.
+
 ### `Fast kernels`
 
 `INPOLY` relies on `Cython` to compile the core "inpolygon" tests into a fast kernel. `inpoly_.pyx` contains the human-readable `Cython` implementation, `inpoly_.c` is the auto-generated output. For a full build:
