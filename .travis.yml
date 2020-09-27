@@ -1,5 +1,4 @@
 language: python
-python: 3.8
 jobs:
   include:
   - services: docker
@@ -18,7 +17,7 @@ install:
 - python3 -m pip install --upgrade setuptools wheel
 - python3 -m pip install cibuildwheel==1.6.1
 script:
-- cibuildwheel --output-dir dist
+- python3 -m cibuildwheel --output-dir dist
 deploy:
   provider: pypi
   username: __token__
