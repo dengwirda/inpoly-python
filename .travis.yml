@@ -31,7 +31,7 @@ env:
     - CIBW_BEFORE_BUILD="pip install numpy"
 install:
 - python3 -m pip install --upgrade setuptools wheel
-- python3 -m pip install cibuildwheel==1.6.1
+- python3 -m pip install cibuildwheel==1.7.1
 script:
 - python3 -m cibuildwheel --output-dir dist
 after_success:
