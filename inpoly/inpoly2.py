@@ -56,7 +56,7 @@ def inpoly2(vert, node, edge=None, ftol=5.0e-14):
     of calls to the (relatively) expensive edge intersection
     test.
 
-    Updated: 26 September, 2020
+    Updated: 19 Dec, 2020
 
     Authors: Darren Engwirda, Keith Roberts
 
@@ -64,6 +64,13 @@ def inpoly2(vert, node, edge=None, ftol=5.0e-14):
 
     vert = np.asarray(vert, dtype=np.float64)
     node = np.asarray(node, dtype=np.float64)
+
+    STAT = np.full(
+        vert.shape[0], False, dtype=np.bool_)
+    BNDS = np.full(
+        vert.shape[0], False, dtype=np.bool_)
+
+    if node.size == 0: return STAT, BNDS
 
     if edge is None:
 #----------------------------------- set edges if not passed
@@ -79,20 +86,24 @@ def inpoly2(vert, node, edge=None, ftol=5.0e-14):
     else:
         edge = np.asarray(edge, dtype=np.int32)
 
-    STAT = np.full(
-        vert.shape[0], False, dtype=np.bool_)
-    BNDS = np.full(
-        vert.shape[0], False, dtype=np.bool_)
-
 #----------------------------------- prune points using bbox
+    xdel = np.amax(node[:, 0]) - np.amin(node[:, 0])
+    ydel = np.amax(node[:, 1]) - np.amin(node[:, 1])
+
+    lbar = (xdel + ydel) / 2.0
+
+    veps = (lbar * ftol)
+
     mask = np.logical_and.reduce((
-        vert[:, 0] >= np.nanmin(node[:, 0]),
-        vert[:, 1] >= np.nanmin(node[:, 1]),
-        vert[:, 0] <= np.nanmax(node[:, 0]),
-        vert[:, 1] <= np.nanmax(node[:, 1]))
+        vert[:, 0] >= np.nanmin(node[:, 0]) - veps,
+        vert[:, 1] >= np.nanmin(node[:, 1]) - veps,
+        vert[:, 0] <= np.nanmax(node[:, 0]) + veps,
+        vert[:, 1] <= np.nanmax(node[:, 1]) + veps)
     )
 
     vert = vert[mask]
+
+    if vert.size == 0: return STAT, BNDS
 
 #------------------ flip to ensure y-axis is the `long` axis
     xdel = np.amax(vert[:, 0]) - np.amin(vert[:, 0])
@@ -129,7 +140,7 @@ def _inpoly(vert, node, edge, ftol, lbar):
 
     """
 
-    feps = ftol * (lbar ** +2)
+    feps = ftol * (lbar ** +1)
     veps = ftol * (lbar ** +1)
 
     stat = np.full(
@@ -148,12 +159,15 @@ def _inpoly(vert, node, edge, ftol, lbar):
     XMIN = np.minimum(XONE, XTWO)
     XMAX = np.maximum(XONE, XTWO)
 
+    XMIN = XMIN - veps
     XMAX = XMAX + veps
     YMIN = YONE - veps
     YMAX = YTWO + veps
 
     YDEL = YTWO - YONE
     XDEL = XTWO - XONE
+
+    EDEL = np.abs(XDEL) + YDEL
 
     ione = np.searchsorted(
         vert[:, 1], YMIN,  "left", sorter=ivec)
@@ -168,8 +182,10 @@ def _inpoly(vert, node, edge, ftol, lbar):
 
         xmin = XMIN[epos]; xmax = XMAX[epos]
 
-        xdel = XDEL[epos]; ydel = YDEL[epos]
+        edel = EDEL[epos]
 
+        xdel = XDEL[epos]; ydel = YDEL[epos]
+        
     #------------------------------- calc. edge-intersection
         for jpos in range(ione[epos], itwo[epos]):
 
@@ -186,7 +202,7 @@ def _inpoly(vert, node, edge, ftol, lbar):
                     mul1 = ydel * (xpos - xone)
                     mul2 = xdel * (ypos - yone)
 
-                    if feps >= abs(mul2 - mul1):
+                    if feps * edel >= abs(mul2 - mul1):
                 #------------------- BNDS -- approx. on edge
                         bnds[jvrt] = True
                         stat[jvrt] = True

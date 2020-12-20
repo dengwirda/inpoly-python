@@ -1664,6 +1664,7 @@ static const char __pyx_k_np[] = "np";
 static const char __pyx_k_YMIN[] = "YMIN";
 static const char __pyx_k_bnds[] = "bnds";
 static const char __pyx_k_bptr[] = "bptr";
+static const char __pyx_k_edel[] = "edel";
 static const char __pyx_k_edge[] = "edge";
 static const char __pyx_k_enum[] = "enum";
 static const char __pyx_k_epos[] = "epos";
@@ -1701,6 +1702,7 @@ static const char __pyx_k_xpos[] = "xpos";
 static const char __pyx_k_xtwo[] = "xtwo";
 static const char __pyx_k_ydel[] = "ydel";
 static const char __pyx_k_ymax[] = "ymax";
+static const char __pyx_k_ymin[] = "ymin";
 static const char __pyx_k_yone[] = "yone";
 static const char __pyx_k_ypos[] = "ypos";
 static const char __pyx_k_ytwo[] = "ytwo";
@@ -1726,6 +1728,7 @@ static PyObject *__pyx_n_s_bnds;
 static PyObject *__pyx_n_s_bptr;
 static PyObject *__pyx_n_s_cline_in_traceback;
 static PyObject *__pyx_n_s_dtype;
+static PyObject *__pyx_n_s_edel;
 static PyObject *__pyx_n_s_edge;
 static PyObject *__pyx_n_s_enum;
 static PyObject *__pyx_n_s_epos;
@@ -1775,6 +1778,7 @@ static PyObject *__pyx_n_s_xpos;
 static PyObject *__pyx_n_s_xtwo;
 static PyObject *__pyx_n_s_ydel;
 static PyObject *__pyx_n_s_ymax;
+static PyObject *__pyx_n_s_ymin;
 static PyObject *__pyx_n_s_yone;
 static PyObject *__pyx_n_s_ypos;
 static PyObject *__pyx_n_s_ytwo;
@@ -1800,7 +1804,7 @@ static PyObject *__pyx_codeobj__7;
 
 /* Python wrapper */
 static PyObject *__pyx_pw_6inpoly_7inpoly__1_inpoly(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_6inpoly_7inpoly___inpoly[] = "\n    _INPOLY: the local cython version of the crossing-number\n    test. Loop over edges; do a binary-search for the first\n    vertex that intersects with the edge y-range; crossing-\n    number comparisons; break when the local y-range is met.\n\n    Updated: 26 September, 2020\n\n    Authors: Darren Engwirda, Keith Roberts\n\n    ";
+static char __pyx_doc_6inpoly_7inpoly___inpoly[] = "\n    _INPOLY: the local cython version of the crossing-number\n    test. Loop over edges; do a binary-search for the first\n    vertex that intersects with the edge y-range; crossing-\n    number comparisons; break when the local y-range is met.\n\n    Updated: 19 December, 2020\n\n    Authors: Darren Engwirda, Keith Roberts\n\n    ";
 static PyMethodDef __pyx_mdef_6inpoly_7inpoly__1_inpoly = {"_inpoly", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_6inpoly_7inpoly__1_inpoly, METH_VARARGS|METH_KEYWORDS, __pyx_doc_6inpoly_7inpoly___inpoly};
 static PyObject *__pyx_pw_6inpoly_7inpoly__1_inpoly(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_vert = 0;
@@ -1936,6 +1940,7 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
   PyArrayObject *__pyx_v_head = 0;
   Py_ssize_t const *__pyx_v_iptr;
   Py_ssize_t const *__pyx_v_hptr;
+  double __pyx_v_edel;
   __Pyx_LocalBuf_ND __pyx_pybuffernd_bnds;
   __Pyx_Buffer __pyx_pybuffer_bnds;
   __Pyx_LocalBuf_ND __pyx_pybuffernd_edge;
@@ -2025,15 +2030,15 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
   /* "inpoly/inpoly_.pyx":29
  *     cdef double xpos, ypos, mul1, mul2
  * 
- *     feps = ftol * (lbar ** +2)          # local bnds reltol             # <<<<<<<<<<<<<<
+ *     feps = ftol * (lbar ** +1)          # local bnds reltol             # <<<<<<<<<<<<<<
  *     veps = ftol * (lbar ** +1)
  * 
  */
-  __pyx_v_feps = (__pyx_v_ftol * pow(__pyx_v_lbar, 2.0));
+  __pyx_v_feps = (__pyx_v_ftol * pow(__pyx_v_lbar, 1.0));
 
   /* "inpoly/inpoly_.pyx":30
  * 
- *     feps = ftol * (lbar ** +2)          # local bnds reltol
+ *     feps = ftol * (lbar ** +1)          # local bnds reltol
  *     veps = ftol * (lbar ** +1)             # <<<<<<<<<<<<<<
  * 
  *     cdef size_t vnum = vert.shape[0]
@@ -2510,7 +2515,7 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
  *         xmin = min(xone, xtwo)          # compute edge bbox
  *         xmax = max(xone, xtwo)             # <<<<<<<<<<<<<<
  * 
- *         xmax = xmax + veps
+ *         xmin = xmin - veps
  */
     __pyx_t_17 = __pyx_v_xtwo;
     __pyx_t_15 = __pyx_v_xone;
@@ -2524,14 +2529,23 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
     /* "inpoly/inpoly_.pyx":71
  *         xmax = max(xone, xtwo)
  * 
+ *         xmin = xmin - veps             # <<<<<<<<<<<<<<
+ *         xmax = xmax + veps
+ *         ymax = ytwo + veps
+ */
+    __pyx_v_xmin = (__pyx_v_xmin - __pyx_v_veps);
+
+    /* "inpoly/inpoly_.pyx":72
+ * 
+ *         xmin = xmin - veps
  *         xmax = xmax + veps             # <<<<<<<<<<<<<<
  *         ymax = ytwo + veps
  * 
  */
     __pyx_v_xmax = (__pyx_v_xmax + __pyx_v_veps);
 
-    /* "inpoly/inpoly_.pyx":72
- * 
+    /* "inpoly/inpoly_.pyx":73
+ *         xmin = xmin - veps
  *         xmax = xmax + veps
  *         ymax = ytwo + veps             # <<<<<<<<<<<<<<
  * 
@@ -2539,7 +2553,7 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
  */
     __pyx_v_ymax = (__pyx_v_ytwo + __pyx_v_veps);
 
-    /* "inpoly/inpoly_.pyx":74
+    /* "inpoly/inpoly_.pyx":75
  *         ymax = ytwo + veps
  * 
  *         xdel = xtwo - xone             # <<<<<<<<<<<<<<
@@ -2548,16 +2562,25 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
  */
     __pyx_v_xdel = (__pyx_v_xtwo - __pyx_v_xone);
 
-    /* "inpoly/inpoly_.pyx":75
+    /* "inpoly/inpoly_.pyx":76
  * 
  *         xdel = xtwo - xone
  *         ydel = ytwo - yone             # <<<<<<<<<<<<<<
  * 
- *     #------------------------------- calc. edge-intersection
+ *         edel = abs(xdel) + ydel
  */
     __pyx_v_ydel = (__pyx_v_ytwo - __pyx_v_yone);
 
     /* "inpoly/inpoly_.pyx":78
+ *         ydel = ytwo - yone
+ * 
+ *         edel = abs(xdel) + ydel             # <<<<<<<<<<<<<<
+ * 
+ *     #------------------------------- calc. edge-intersection
+ */
+    __pyx_v_edel = (fabs(__pyx_v_xdel) + __pyx_v_ydel);
+
+    /* "inpoly/inpoly_.pyx":81
  * 
  *     #------------------------------- calc. edge-intersection
  *         for jpos in range(hptr[epos], vnum):             # <<<<<<<<<<<<<<
@@ -2569,7 +2592,7 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
     for (__pyx_t_19 = (__pyx_v_hptr[__pyx_v_epos]); __pyx_t_19 < __pyx_t_18; __pyx_t_19+=1) {
       __pyx_v_jpos = __pyx_t_19;
 
-      /* "inpoly/inpoly_.pyx":80
+      /* "inpoly/inpoly_.pyx":83
  *         for jpos in range(hptr[epos], vnum):
  * 
  *             jvrt = iptr[jpos]             # <<<<<<<<<<<<<<
@@ -2578,7 +2601,7 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
  */
       __pyx_v_jvrt = (__pyx_v_iptr[__pyx_v_jpos]);
 
-      /* "inpoly/inpoly_.pyx":82
+      /* "inpoly/inpoly_.pyx":85
  *             jvrt = iptr[jpos]
  * 
  *             if bptr[jvrt]: continue             # <<<<<<<<<<<<<<
@@ -2590,7 +2613,7 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
         goto __pyx_L5_continue;
       }
 
-      /* "inpoly/inpoly_.pyx":84
+      /* "inpoly/inpoly_.pyx":87
  *             if bptr[jvrt]: continue
  * 
  *             xpos = vert[jvrt, 0]             # <<<<<<<<<<<<<<
@@ -2601,7 +2624,7 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
       __pyx_t_8 = 0;
       __pyx_v_xpos = (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_vert.rcbuffer->pybuffer.buf, __pyx_t_21, __pyx_pybuffernd_vert.diminfo[0].strides, __pyx_t_8, __pyx_pybuffernd_vert.diminfo[1].strides));
 
-      /* "inpoly/inpoly_.pyx":85
+      /* "inpoly/inpoly_.pyx":88
  * 
  *             xpos = vert[jvrt, 0]
  *             ypos = vert[jvrt, 1]             # <<<<<<<<<<<<<<
@@ -2612,7 +2635,7 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
       __pyx_t_8 = 1;
       __pyx_v_ypos = (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_vert.rcbuffer->pybuffer.buf, __pyx_t_21, __pyx_pybuffernd_vert.diminfo[0].strides, __pyx_t_8, __pyx_pybuffernd_vert.diminfo[1].strides));
 
-      /* "inpoly/inpoly_.pyx":87
+      /* "inpoly/inpoly_.pyx":90
  *             ypos = vert[jvrt, 1]
  * 
  *             if ypos >= ymax: break      # due to the y-sort             # <<<<<<<<<<<<<<
@@ -2624,7 +2647,7 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
         goto __pyx_L6_break;
       }
 
-      /* "inpoly/inpoly_.pyx":89
+      /* "inpoly/inpoly_.pyx":92
  *             if ypos >= ymax: break      # due to the y-sort
  * 
  *             if xpos >= xmin:             # <<<<<<<<<<<<<<
@@ -2634,7 +2657,7 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
       __pyx_t_20 = ((__pyx_v_xpos >= __pyx_v_xmin) != 0);
       if (__pyx_t_20) {
 
-        /* "inpoly/inpoly_.pyx":90
+        /* "inpoly/inpoly_.pyx":93
  * 
  *             if xpos >= xmin:
  *                 if xpos <= xmax:             # <<<<<<<<<<<<<<
@@ -2644,7 +2667,7 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
         __pyx_t_20 = ((__pyx_v_xpos <= __pyx_v_xmax) != 0);
         if (__pyx_t_20) {
 
-          /* "inpoly/inpoly_.pyx":92
+          /* "inpoly/inpoly_.pyx":95
  *                 if xpos <= xmax:
  *                 #------------------- compute crossing number
  *                     mul1 = ydel * (xpos - xone)             # <<<<<<<<<<<<<<
@@ -2653,27 +2676,27 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
  */
           __pyx_v_mul1 = (__pyx_v_ydel * (__pyx_v_xpos - __pyx_v_xone));
 
-          /* "inpoly/inpoly_.pyx":93
+          /* "inpoly/inpoly_.pyx":96
  *                 #------------------- compute crossing number
  *                     mul1 = ydel * (xpos - xone)
  *                     mul2 = xdel * (ypos - yone)             # <<<<<<<<<<<<<<
  * 
- *                     if feps >= abs(mul2 - mul1):
+ *                     if feps * edel >= abs(mul2 - mul1):
  */
           __pyx_v_mul2 = (__pyx_v_xdel * (__pyx_v_ypos - __pyx_v_yone));
 
-          /* "inpoly/inpoly_.pyx":95
+          /* "inpoly/inpoly_.pyx":98
  *                     mul2 = xdel * (ypos - yone)
  * 
- *                     if feps >= abs(mul2 - mul1):             # <<<<<<<<<<<<<<
+ *                     if feps * edel >= abs(mul2 - mul1):             # <<<<<<<<<<<<<<
  *                 #------------------- BNDS -- approx. on edge
  *                         bptr[jvrt] = 1
  */
-          __pyx_t_20 = ((__pyx_v_feps >= fabs((__pyx_v_mul2 - __pyx_v_mul1))) != 0);
+          __pyx_t_20 = (((__pyx_v_feps * __pyx_v_edel) >= fabs((__pyx_v_mul2 - __pyx_v_mul1))) != 0);
           if (__pyx_t_20) {
 
-            /* "inpoly/inpoly_.pyx":97
- *                     if feps >= abs(mul2 - mul1):
+            /* "inpoly/inpoly_.pyx":100
+ *                     if feps * edel >= abs(mul2 - mul1):
  *                 #------------------- BNDS -- approx. on edge
  *                         bptr[jvrt] = 1             # <<<<<<<<<<<<<<
  *                         sptr[jvrt] = 1
@@ -2681,7 +2704,7 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
  */
             (__pyx_v_bptr[__pyx_v_jvrt]) = 1;
 
-            /* "inpoly/inpoly_.pyx":98
+            /* "inpoly/inpoly_.pyx":101
  *                 #------------------- BNDS -- approx. on edge
  *                         bptr[jvrt] = 1
  *                         sptr[jvrt] = 1             # <<<<<<<<<<<<<<
@@ -2690,17 +2713,17 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
  */
             (__pyx_v_sptr[__pyx_v_jvrt]) = 1;
 
-            /* "inpoly/inpoly_.pyx":95
+            /* "inpoly/inpoly_.pyx":98
  *                     mul2 = xdel * (ypos - yone)
  * 
- *                     if feps >= abs(mul2 - mul1):             # <<<<<<<<<<<<<<
+ *                     if feps * edel >= abs(mul2 - mul1):             # <<<<<<<<<<<<<<
  *                 #------------------- BNDS -- approx. on edge
  *                         bptr[jvrt] = 1
  */
             goto __pyx_L11;
           }
 
-          /* "inpoly/inpoly_.pyx":100
+          /* "inpoly/inpoly_.pyx":103
  *                         sptr[jvrt] = 1
  * 
  *                     elif (ypos == yone) and (xpos == xone):             # <<<<<<<<<<<<<<
@@ -2718,7 +2741,7 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
           __pyx_L12_bool_binop_done:;
           if (__pyx_t_20) {
 
-            /* "inpoly/inpoly_.pyx":102
+            /* "inpoly/inpoly_.pyx":105
  *                     elif (ypos == yone) and (xpos == xone):
  *                 #------------------- BNDS -- match about ONE
  *                         bptr[jvrt] = 1             # <<<<<<<<<<<<<<
@@ -2727,7 +2750,7 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
  */
             (__pyx_v_bptr[__pyx_v_jvrt]) = 1;
 
-            /* "inpoly/inpoly_.pyx":103
+            /* "inpoly/inpoly_.pyx":106
  *                 #------------------- BNDS -- match about ONE
  *                         bptr[jvrt] = 1
  *                         sptr[jvrt] = 1             # <<<<<<<<<<<<<<
@@ -2736,7 +2759,7 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
  */
             (__pyx_v_sptr[__pyx_v_jvrt]) = 1;
 
-            /* "inpoly/inpoly_.pyx":100
+            /* "inpoly/inpoly_.pyx":103
  *                         sptr[jvrt] = 1
  * 
  *                     elif (ypos == yone) and (xpos == xone):             # <<<<<<<<<<<<<<
@@ -2746,7 +2769,7 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
             goto __pyx_L11;
           }
 
-          /* "inpoly/inpoly_.pyx":105
+          /* "inpoly/inpoly_.pyx":108
  *                         sptr[jvrt] = 1
  * 
  *                     elif (ypos == ytwo) and (xpos == xtwo):             # <<<<<<<<<<<<<<
@@ -2764,7 +2787,7 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
           __pyx_L14_bool_binop_done:;
           if (__pyx_t_20) {
 
-            /* "inpoly/inpoly_.pyx":107
+            /* "inpoly/inpoly_.pyx":110
  *                     elif (ypos == ytwo) and (xpos == xtwo):
  *                 #------------------- BNDS -- match about TWO
  *                         bptr[jvrt] = 1             # <<<<<<<<<<<<<<
@@ -2773,7 +2796,7 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
  */
             (__pyx_v_bptr[__pyx_v_jvrt]) = 1;
 
-            /* "inpoly/inpoly_.pyx":108
+            /* "inpoly/inpoly_.pyx":111
  *                 #------------------- BNDS -- match about TWO
  *                         bptr[jvrt] = 1
  *                         sptr[jvrt] = 1             # <<<<<<<<<<<<<<
@@ -2782,7 +2805,7 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
  */
             (__pyx_v_sptr[__pyx_v_jvrt]) = 1;
 
-            /* "inpoly/inpoly_.pyx":105
+            /* "inpoly/inpoly_.pyx":108
  *                         sptr[jvrt] = 1
  * 
  *                     elif (ypos == ytwo) and (xpos == xtwo):             # <<<<<<<<<<<<<<
@@ -2792,7 +2815,7 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
             goto __pyx_L11;
           }
 
-          /* "inpoly/inpoly_.pyx":110
+          /* "inpoly/inpoly_.pyx":113
  *                         sptr[jvrt] = 1
  * 
  *                     elif (mul1 <= mul2) and (ypos >= yone) \             # <<<<<<<<<<<<<<
@@ -2806,7 +2829,7 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
             goto __pyx_L16_bool_binop_done;
           }
 
-          /* "inpoly/inpoly_.pyx":111
+          /* "inpoly/inpoly_.pyx":114
  * 
  *                     elif (mul1 <= mul2) and (ypos >= yone) \
  *                             and (ypos < ytwo):             # <<<<<<<<<<<<<<
@@ -2823,7 +2846,7 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
           __pyx_t_20 = __pyx_t_22;
           __pyx_L16_bool_binop_done:;
 
-          /* "inpoly/inpoly_.pyx":110
+          /* "inpoly/inpoly_.pyx":113
  *                         sptr[jvrt] = 1
  * 
  *                     elif (mul1 <= mul2) and (ypos >= yone) \             # <<<<<<<<<<<<<<
@@ -2832,7 +2855,7 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
  */
           if (__pyx_t_20) {
 
-            /* "inpoly/inpoly_.pyx":113
+            /* "inpoly/inpoly_.pyx":116
  *                             and (ypos < ytwo):
  *                 #------------------- advance crossing number
  *                         sptr[jvrt] = 1 - sptr[jvrt]             # <<<<<<<<<<<<<<
@@ -2841,7 +2864,7 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
  */
             (__pyx_v_sptr[__pyx_v_jvrt]) = (1 - (__pyx_v_sptr[__pyx_v_jvrt]));
 
-            /* "inpoly/inpoly_.pyx":110
+            /* "inpoly/inpoly_.pyx":113
  *                         sptr[jvrt] = 1
  * 
  *                     elif (mul1 <= mul2) and (ypos >= yone) \             # <<<<<<<<<<<<<<
@@ -2851,7 +2874,7 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
           }
           __pyx_L11:;
 
-          /* "inpoly/inpoly_.pyx":90
+          /* "inpoly/inpoly_.pyx":93
  * 
  *             if xpos >= xmin:
  *                 if xpos <= xmax:             # <<<<<<<<<<<<<<
@@ -2860,7 +2883,7 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
  */
         }
 
-        /* "inpoly/inpoly_.pyx":89
+        /* "inpoly/inpoly_.pyx":92
  *             if ypos >= ymax: break      # due to the y-sort
  * 
  *             if xpos >= xmin:             # <<<<<<<<<<<<<<
@@ -2870,7 +2893,7 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
         goto __pyx_L9;
       }
 
-      /* "inpoly/inpoly_.pyx":115
+      /* "inpoly/inpoly_.pyx":118
  *                         sptr[jvrt] = 1 - sptr[jvrt]
  * 
  *             elif (ypos >= yone) and (ypos < ytwo):             # <<<<<<<<<<<<<<
@@ -2888,7 +2911,7 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
       __pyx_L19_bool_binop_done:;
       if (__pyx_t_20) {
 
-        /* "inpoly/inpoly_.pyx":117
+        /* "inpoly/inpoly_.pyx":120
  *             elif (ypos >= yone) and (ypos < ytwo):
  *             #----------------------- advance crossing number
  *                 sptr[jvrt] = 1 - sptr[jvrt]             # <<<<<<<<<<<<<<
@@ -2897,7 +2920,7 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
  */
         (__pyx_v_sptr[__pyx_v_jvrt]) = (1 - (__pyx_v_sptr[__pyx_v_jvrt]));
 
-        /* "inpoly/inpoly_.pyx":115
+        /* "inpoly/inpoly_.pyx":118
  *                         sptr[jvrt] = 1 - sptr[jvrt]
  * 
  *             elif (ypos >= yone) and (ypos < ytwo):             # <<<<<<<<<<<<<<
@@ -2911,13 +2934,13 @@ static PyObject *__pyx_pf_6inpoly_7inpoly___inpoly(CYTHON_UNUSED PyObject *__pyx
     __pyx_L6_break:;
   }
 
-  /* "inpoly/inpoly_.pyx":119
+  /* "inpoly/inpoly_.pyx":122
  *                 sptr[jvrt] = 1 - sptr[jvrt]
  * 
  *     return stat, bnds             # <<<<<<<<<<<<<<
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_5 = PyTuple_New(2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 119, __pyx_L1_error)
+  __pyx_t_5 = PyTuple_New(2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 122, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_INCREF(((PyObject *)__pyx_v_stat));
   __Pyx_GIVEREF(((PyObject *)__pyx_v_stat));
@@ -3874,6 +3897,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_bptr, __pyx_k_bptr, sizeof(__pyx_k_bptr), 0, 0, 1, 1},
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
   {&__pyx_n_s_dtype, __pyx_k_dtype, sizeof(__pyx_k_dtype), 0, 0, 1, 1},
+  {&__pyx_n_s_edel, __pyx_k_edel, sizeof(__pyx_k_edel), 0, 0, 1, 1},
   {&__pyx_n_s_edge, __pyx_k_edge, sizeof(__pyx_k_edge), 0, 0, 1, 1},
   {&__pyx_n_s_enum, __pyx_k_enum, sizeof(__pyx_k_enum), 0, 0, 1, 1},
   {&__pyx_n_s_epos, __pyx_k_epos, sizeof(__pyx_k_epos), 0, 0, 1, 1},
@@ -3923,6 +3947,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_xtwo, __pyx_k_xtwo, sizeof(__pyx_k_xtwo), 0, 0, 1, 1},
   {&__pyx_n_s_ydel, __pyx_k_ydel, sizeof(__pyx_k_ydel), 0, 0, 1, 1},
   {&__pyx_n_s_ymax, __pyx_k_ymax, sizeof(__pyx_k_ymax), 0, 0, 1, 1},
+  {&__pyx_n_s_ymin, __pyx_k_ymin, sizeof(__pyx_k_ymin), 0, 0, 1, 1},
   {&__pyx_n_s_yone, __pyx_k_yone, sizeof(__pyx_k_yone), 0, 0, 1, 1},
   {&__pyx_n_s_ypos, __pyx_k_ypos, sizeof(__pyx_k_ypos), 0, 0, 1, 1},
   {&__pyx_n_s_ytwo, __pyx_k_ytwo, sizeof(__pyx_k_ytwo), 0, 0, 1, 1},
@@ -3994,10 +4019,10 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  *             np.ndarray[double, ndim=+2] node,
  *         np.ndarray[np.int32_t, ndim=+2] edge,
  */
-  __pyx_tuple__6 = PyTuple_Pack(36, __pyx_n_s_vert, __pyx_n_s_node, __pyx_n_s_edge, __pyx_n_s_ftol, __pyx_n_s_lbar, __pyx_n_s_epos, __pyx_n_s_jpos, __pyx_n_s_inod, __pyx_n_s_jnod, __pyx_n_s_jvrt, __pyx_n_s_feps, __pyx_n_s_veps, __pyx_n_s_xone, __pyx_n_s_xtwo, __pyx_n_s_xmin, __pyx_n_s_xmax, __pyx_n_s_xdel, __pyx_n_s_yone, __pyx_n_s_ytwo, __pyx_n_s_ymax, __pyx_n_s_ydel, __pyx_n_s_xpos, __pyx_n_s_ypos, __pyx_n_s_mul1, __pyx_n_s_mul2, __pyx_n_s_vnum, __pyx_n_s_enum, __pyx_n_s_stat, __pyx_n_s_bnds, __pyx_n_s_sptr, __pyx_n_s_bptr, __pyx_n_s_ivec, __pyx_n_s_YMIN, __pyx_n_s_head, __pyx_n_s_iptr, __pyx_n_s_hptr); if (unlikely(!__pyx_tuple__6)) __PYX_ERR(0, 8, __pyx_L1_error)
+  __pyx_tuple__6 = PyTuple_Pack(38, __pyx_n_s_vert, __pyx_n_s_node, __pyx_n_s_edge, __pyx_n_s_ftol, __pyx_n_s_lbar, __pyx_n_s_epos, __pyx_n_s_jpos, __pyx_n_s_inod, __pyx_n_s_jnod, __pyx_n_s_jvrt, __pyx_n_s_feps, __pyx_n_s_veps, __pyx_n_s_xone, __pyx_n_s_xtwo, __pyx_n_s_xmin, __pyx_n_s_xmax, __pyx_n_s_xdel, __pyx_n_s_yone, __pyx_n_s_ytwo, __pyx_n_s_ymin, __pyx_n_s_ymax, __pyx_n_s_ydel, __pyx_n_s_xpos, __pyx_n_s_ypos, __pyx_n_s_mul1, __pyx_n_s_mul2, __pyx_n_s_vnum, __pyx_n_s_enum, __pyx_n_s_stat, __pyx_n_s_bnds, __pyx_n_s_sptr, __pyx_n_s_bptr, __pyx_n_s_ivec, __pyx_n_s_YMIN, __pyx_n_s_head, __pyx_n_s_iptr, __pyx_n_s_hptr, __pyx_n_s_edel); if (unlikely(!__pyx_tuple__6)) __PYX_ERR(0, 8, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__6);
   __Pyx_GIVEREF(__pyx_tuple__6);
-  __pyx_codeobj__7 = (PyObject*)__Pyx_PyCode_New(5, 0, 36, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__6, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_inpoly_inpoly__pyx, __pyx_n_s_inpoly, 8, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__7)) __PYX_ERR(0, 8, __pyx_L1_error)
+  __pyx_codeobj__7 = (PyObject*)__Pyx_PyCode_New(5, 0, 38, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__6, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_inpoly_inpoly__pyx, __pyx_n_s_inpoly, 8, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__7)) __PYX_ERR(0, 8, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;

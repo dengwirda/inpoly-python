@@ -15,7 +15,7 @@ def _inpoly(np.ndarray[double, ndim=+2] vert,
     vertex that intersects with the edge y-range; crossing-
     number comparisons; break when the local y-range is met.
 
-    Updated: 26 September, 2020
+    Updated: 19 December, 2020
 
     Authors: Darren Engwirda, Keith Roberts
 
@@ -23,10 +23,10 @@ def _inpoly(np.ndarray[double, ndim=+2] vert,
     cdef size_t epos, jpos, inod, jnod, jvrt
     cdef double feps, veps
     cdef double xone, xtwo, xmin, xmax, xdel
-    cdef double yone, ytwo, ymax, ydel
+    cdef double yone, ytwo, ymin, ymax, ydel
     cdef double xpos, ypos, mul1, mul2
 
-    feps = ftol * (lbar ** +2)          # local bnds reltol
+    feps = ftol * (lbar ** +1)          # local bnds reltol
     veps = ftol * (lbar ** +1)
 
     cdef size_t vnum = vert.shape[0]
@@ -68,11 +68,14 @@ def _inpoly(np.ndarray[double, ndim=+2] vert,
         xmin = min(xone, xtwo)          # compute edge bbox
         xmax = max(xone, xtwo)
 
+        xmin = xmin - veps
         xmax = xmax + veps
         ymax = ytwo + veps
 
         xdel = xtwo - xone
         ydel = ytwo - yone
+
+        edel = abs(xdel) + ydel
 
     #------------------------------- calc. edge-intersection
         for jpos in range(hptr[epos], vnum):
@@ -92,7 +95,7 @@ def _inpoly(np.ndarray[double, ndim=+2] vert,
                     mul1 = ydel * (xpos - xone)
                     mul2 = xdel * (ypos - yone)
 
-                    if feps >= abs(mul2 - mul1):
+                    if feps * edel >= abs(mul2 - mul1):
                 #------------------- BNDS -- approx. on edge
                         bptr[jvrt] = 1
                         sptr[jvrt] = 1
