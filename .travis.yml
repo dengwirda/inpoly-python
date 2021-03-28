@@ -1,37 +1,37 @@
 language: python
 jobs:
   include:
-    - name: "Linux py35:py38"
+    - name: "Linux py36:py39"
       services: docker
       sudo: required
       language: python
-      python: 3.8
+      python: 3.9
       env:
-        - CIBW_BUILD="cp35-* cp36-* cp37-* cp38-*"
+        - CIBW_BUILD="cp36-* cp37-* cp38-* cp39-*"
 
-    - name: "MacOS py35:py38"
+    - name: "MacOS py36:py39"
       os: osx
       language: shell
       env:
-        - CIBW_BUILD="cp35-* cp36-* cp37-* cp38-*"
+        - CIBW_BUILD="cp36-* cp37-* cp38-* cp39-*"
 
-    - name: "Windows py35:py38"
+    - name: "Windows py36:py39"
       os: windows
       language: shell
       before_install:
-        - choco install python --version 3.8.0
-        - export PATH="/c/Python38:/c/Python38/Scripts:$PATH"
+        - choco install python --version 3.9.0
+        - export PATH="/c/Python98:/c/Python39/Scripts:$PATH"
         # make sure it's on PATH as 'python3'
-        - ln -s /c/Python38/python.exe /c/Python38/python3.exe
+        - ln -s /c/Python39/python.exe /c/Python39/python3.exe
       env:
-        - CIBW_BUILD="cp35-* cp36-* cp37-* cp38-*"
+        - CIBW_BUILD="cp36-* cp37-* cp38-* cp39-*"
 env:
   global:
     - TWINE_USERNAME=__token__
     - CIBW_BEFORE_BUILD="pip install numpy"
 install:
 - python3 -m pip install --upgrade setuptools wheel
-- python3 -m pip install cibuildwheel==1.7.1
+- python3 -m pip install cibuildwheel==1.10.0
 script:
 - python3 -m cibuildwheel --output-dir dist
 after_success:

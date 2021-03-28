@@ -38,7 +38,7 @@ DESCRIPTION = "Fast point(s)-in-polygon queries."
 AUTHOR = "Darren Engwirda and Keith Roberts"
 AUTHOR_EMAIL = "d.engwirda@gmail.com"
 URL = "https://github.com/dengwirda/inpoly-python"
-VERSION = "0.2.0"
+VERSION = "0.2.1"
 REQUIRES_PYTHON = ">=3.3.0"
 KEYWORDS = "Point-in-Polygon Geometry GIS"
 
@@ -81,7 +81,7 @@ setup(
     python_requires=REQUIRES_PYTHON,
     keywords=KEYWORDS,
     url=URL,
-    packages=find_packages(),
+    packages=find_packages(exclude=["msh", ]),  # just inpoly
     ext_modules=EXT_MODULES,
     install_requires=REQUIRED,
     classifiers=CLASSIFY
