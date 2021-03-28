@@ -20,7 +20,7 @@ jobs:
       language: shell
       before_install:
         - choco install python --version 3.9.0
-        - export PATH="/c/Python98:/c/Python39/Scripts:$PATH"
+        - export PATH="/c/Python39:/c/Python39/Scripts:$PATH"
         # make sure it's on PATH as 'python3'
         - ln -s /c/Python39/python.exe /c/Python39/python3.exe
       env:
