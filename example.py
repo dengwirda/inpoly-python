@@ -5,13 +5,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.path as mpltPath
 
+from distutils.util import strtobool
+
 from inpoly import inpoly2
 from msh import jigsaw_msh_t, loadmsh
 
 import argparse
 
 
-def ex_1():
+def ex_1(args):
 
 #-- Example 1: set up simple boxes and run points-in-polygon
 #-- queries. Boxes defined as a "collection" of polygons and
@@ -34,18 +36,18 @@ def ex_1():
 
     IN, ON = inpoly2(points, node, edge)
 
+    if (not args.showplot): return
+
     fig, ax = plt.subplots()
     plt.plot(points[IN==1, 0], points[IN==1, 1], "b.")
     plt.plot(points[IN==0, 0], points[IN==0, 1], "r.")
     plt.plot(points[ON==1, 0], points[ON==1, 1], "ms")
 
-    ax.set_aspect('equal', adjustable='box')
+    ax.set_aspect("equal", adjustable="box")
     plt.show()
 
-    return
 
-
-def ex_2():
+def ex_2(args):
 
 #-- Example 2: load the lake superior geometry and test wrt.
 #-- random query points, input nodes + edge centres.
@@ -75,18 +77,18 @@ def ex_2():
 
     IN, ON = inpoly2(points, node, edge)
 
+    if (not args.showplot): return
+
     fig, ax = plt.subplots()
     plt.plot(points[IN==1, 0], points[IN==1, 1], "b.")
     plt.plot(points[IN==0, 0], points[IN==0, 1], "r.")
     plt.plot(points[ON==1, 0], points[ON==1, 1], "ms")
 
-    ax.set_aspect('equal', adjustable='box')
+    ax.set_aspect("equal", adjustable="box")
     plt.show()
 
-    return
 
-
-def ex_3():
+def ex_3(args):
 
 #-- Example 3: load geom. from geographic data and test wrt.
 #-- random query points, input nodes + edge centres.
@@ -118,28 +120,28 @@ def ex_3():
 
     ttic = time.time()
 
-    IN, ON = inpoly2(points, node, edge)
-
-    ttoc = time.time()
-    print("INPOLY2: ", ttoc - ttic)
-
-    ttic = time.time()
-
     path = mpltPath.Path(node)
     IN = path.contains_points(points)
 
     ttoc = time.time()
     print("PLTPATH: ", ttoc - ttic)
 
+    ttic = time.time()
+
+    IN, ON = inpoly2(points, node, edge)
+
+    ttoc = time.time()
+    print("INPOLY2: ", ttoc - ttic)
+
+    if (not args.showplot): return
+
     fig, ax = plt.subplots()
     plt.plot(points[IN==1, 0], points[IN==1, 1], "b.")
     plt.plot(points[IN==0, 0], points[IN==0, 1], "r.")
     plt.plot(points[ON==1, 0], points[ON==1, 1], "ms")
 
-    ax.set_aspect('equal', adjustable='box')
+    ax.set_aspect("equal", adjustable="box")
     plt.show()
-
-    return
 
 
 if (__name__ == "__main__"):
@@ -150,8 +152,13 @@ if (__name__ == "__main__"):
                         default=1,
                         required=False, help="Run example with ID = (1-3)")
 
+    parser.add_argument("--showplot", dest="showplot", 
+                        type=lambda x: bool(strtobool(x)),
+                        default=True,
+                        required=False, help="True to draw fig. to screen")
+
     args = parser.parse_args()
 
-    if (args.IDnumber == 1): ex_1()
-    if (args.IDnumber == 2): ex_2()
-    if (args.IDnumber == 3): ex_3()
+    if (args.IDnumber == 1): ex_1(args)
+    if (args.IDnumber == 2): ex_2(args)
+    if (args.IDnumber == 3): ex_3(args)
