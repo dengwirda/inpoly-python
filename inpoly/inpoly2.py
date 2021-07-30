@@ -87,8 +87,8 @@ def inpoly2(vert, node, edge=None, ftol=5.0e-14):
         edge = np.asarray(edge, dtype=np.int32)
 
 #----------------------------------- prune points using bbox
-    xdel = np.amax(node[:, 0]) - np.amin(node[:, 0])
-    ydel = np.amax(node[:, 1]) - np.amin(node[:, 1])
+    xdel = np.nanmax(node[:, 0]) - np.nanmin(node[:, 0])
+    ydel = np.nanmax(node[:, 1]) - np.nanmin(node[:, 1])
 
     lbar = (xdel + ydel) / 2.0
 
