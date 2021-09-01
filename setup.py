@@ -1,9 +1,8 @@
-
 import io
 import os
-from setuptools import setup, find_packages
+
+from setuptools import dist, find_packages, setup
 from setuptools.extension import Extension
-import numpy as np
 
 # https://stackoverflow.com/questions/4505747/
 #   how-should-i-structure-a-python-package-that-contains-cython-code
@@ -16,21 +15,30 @@ import numpy as np
 # https://stackoverflow.com/questions/14372706/
 #   visual-studio-cant-build-due-to-rc-exe
 
+dist.Distribution().fetch_build_eggs(["Cython", "numpy"])
+
+
 EXT_MODULES = []
 
 try:
+    import numpy as np
     from Cython.Build import cythonize
-    EXT_MODULES += cythonize(Extension(
-        "inpoly.inpoly_",
-        sources=[os.path.join("inpoly", "inpoly_.pyx")],
-        include_dirs=[np.get_include()])
+
+    EXT_MODULES += cythonize(
+        Extension(
+            "inpoly.inpoly_",
+            sources=[os.path.join("inpoly", "inpoly_.pyx")],
+            include_dirs=[np.get_include()],
+        )
     )
 
 except ImportError:
-    EXT_MODULES += [Extension(
-        "inpoly.inpoly_",
-        sources=[os.path.join("inpoly", "inpoly_.c")],
-        include_dirs=[np.get_include()])
+    EXT_MODULES += [
+        Extension(
+            "inpoly.inpoly_",
+            sources=[os.path.join("inpoly", "inpoly_.c")],
+            include_dirs=[np.get_include()],
+        )
     ]
 
 NAME = "inpoly"
@@ -42,9 +50,7 @@ VERSION = "0.2.1"
 REQUIRES_PYTHON = ">=3.3.0"
 KEYWORDS = "Point-in-Polygon Geometry GIS"
 
-REQUIRED = [
-    "numpy"
-]
+REQUIRED = ["numpy"]
 
 CLASSIFY = [
     "Development Status :: 4 - Beta",
@@ -56,14 +62,13 @@ CLASSIFY = [
     "Topic :: Scientific/Engineering :: Mathematics",
     "Topic :: Scientific/Engineering :: Physics",
     "Topic :: Scientific/Engineering :: Visualization",
-    "Topic :: Scientific/Engineering :: GIS"
+    "Topic :: Scientific/Engineering :: GIS",
 ]
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 
 try:
-    with io.open(os.path.join(
-            HERE, "README.md"), encoding="utf-8") as f:
+    with io.open(os.path.join(HERE, "README.md"), encoding="utf-8") as f:
         LONG_DESCRIPTION = "\n" + f.read()
 
 except FileNotFoundError:
@@ -81,8 +86,12 @@ setup(
     python_requires=REQUIRES_PYTHON,
     keywords=KEYWORDS,
     url=URL,
-    packages=find_packages(exclude=["msh", ]),  # just inpoly
+    packages=find_packages(
+        exclude=[
+            "msh",
+        ]
+    ),  # just inpoly
     ext_modules=EXT_MODULES,
     install_requires=REQUIRED,
-    classifiers=CLASSIFY
+    classifiers=CLASSIFY,
 )
