@@ -1,7 +1,8 @@
 import io
 import os
-from setuptools import setup, find_packages
-from setuptools.command.build_ext import build_ext as _build_ext
+
+from setuptools import dist, find_packages, setup
+from setuptools.extension import Extension
 
 # https://stackoverflow.com/questions/4505747/
 #   how-should-i-structure-a-python-package-that-contains-cython-code
@@ -14,19 +15,31 @@ from setuptools.command.build_ext import build_ext as _build_ext
 # https://stackoverflow.com/questions/14372706/
 #   visual-studio-cant-build-due-to-rc-exe
 
-# KJR
-# https://stackoverflow.com/questions/19919905/how-to-bootstrap-numpy-installation-in-setup-py
+dist.Distribution().fetch_build_eggs(["Cython", "numpy"])
 
 
-class build_ext(_build_ext):
-    def finalize_options(self):
-        _build_ext.finalize_options(self)
-        # Prevent numpy from thinking it is still in its setup process:
-        __builtins__.__NUMPY_SETUP__ = False
-        import numpy
+EXT_MODULES = []
 
-        self.include_dirs.append(numpy.get_include())
+try:
+    import numpy as np
+    from Cython.Build import cythonize
 
+    EXT_MODULES += cythonize(
+        Extension(
+            "inpoly.inpoly_",
+            sources=[os.path.join("inpoly", "inpoly_.pyx")],
+            include_dirs=[np.get_include()],
+        )
+    )
+
+except ImportError:
+    EXT_MODULES += [
+        Extension(
+            "inpoly.inpoly_",
+            sources=[os.path.join("inpoly", "inpoly_.c")],
+            include_dirs=[np.get_include()],
+        )
+    ]
 
 NAME = "inpoly"
 DESCRIPTION = "Fast point(s)-in-polygon queries."
@@ -78,8 +91,7 @@ setup(
             "msh",
         ]
     ),  # just inpoly
-    cmdclass={"build_ext": build_ext},
-    setup_requires=REQUIRED,
+    ext_modules=EXT_MODULES,
     install_requires=REQUIRED,
     classifiers=CLASSIFY,
 )
