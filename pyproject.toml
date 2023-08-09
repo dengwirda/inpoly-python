@@ -18,7 +18,11 @@ classifiers = [
     "Topic :: Scientific/Engineering :: GIS"
 ]
 packages = [{ include = "inpoly" }]
-include = [{ path = "inpoly/**/*.so", format = "wheel" }]
+include = [
+    { path = "inpoly/**/*.so", format = "wheel" },
+    { path = "inpoly/**/*.dll", format = "wheel" },
+    { path = "inpoly/**/*.dylib", format = "wheel" }
+]
 
 [tool.poetry.dependencies]
 python = ">=3.9"
