@@ -66,9 +66,9 @@ def inpoly2(vert, node, edge=None, ftol=5.0e-14):
     node = np.asarray(node, dtype=np.float64)
 
     STAT = np.full(
-        vert.shape[0], False, dtype=np.bool_)
+        vert.shape[0], False, dtype=bool)
     BNDS = np.full(
-        vert.shape[0], False, dtype=np.bool_)
+        vert.shape[0], False, dtype=bool)
 
     if node.size == 0: return STAT, BNDS
 
@@ -149,9 +149,9 @@ def _inpoly(vert, node, edge, ftol, lbar):
     veps = ftol * (lbar ** +1)
 
     stat = np.full(
-        vert.shape[0], False, dtype=np.bool_)
+        vert.shape[0], False, dtype=bool)
     bnds = np.full(
-        vert.shape[0], False, dtype=np.bool_)
+        vert.shape[0], False, dtype=bool)
 
 #----------------------------------- compute y-range overlap
     ivec = np.argsort(vert[:, 1], kind="quicksort")

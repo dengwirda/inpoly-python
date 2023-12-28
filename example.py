@@ -5,8 +5,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.path as mpltPath
 
-from distutils.util import strtobool
-
 from inpoly import inpoly2
 from msh import jigsaw_msh_t, loadmsh
 
@@ -142,6 +140,21 @@ def ex_3(args):
 
     ax.set_aspect("equal", adjustable="box")
     plt.show()
+    
+    
+def strtobool(val):
+    """
+    Silly re-implementation of strtobool, since python has
+    deprecated these things...
+
+    """
+    val = val.lower()
+    if val in ('y', 'yes', 't', 'true', 'on', '1'):
+        return 1
+    elif val in ('n', 'no', 'f', 'false', 'off', '0'):
+        return 0
+    else:
+        raise ValueError("Invalid bool %r" % (val,))
 
 
 if (__name__ == "__main__"):

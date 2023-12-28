@@ -1,10 +1,15 @@
 
+#cython: language_level=3
+#cython: boundscheck=False
+#cython: wraparound=False
+#cython: nonecheck=False
+#cython: cdivision=True
+#cython: cpow=True
+
 import numpy as np
 cimport numpy as np
 cimport cython
 
-@cython.boundscheck(False)  # deactivate bnds checking
-@cython.wraparound(False)   # deactivate -.ve indexing
 def _inpoly(np.ndarray[double, ndim=+2] vert,
             np.ndarray[double, ndim=+2] node,
         np.ndarray[np.int32_t, ndim=+2] edge,
@@ -53,7 +58,7 @@ def _inpoly(np.ndarray[double, ndim=+2] vert,
 
     cdef const Py_ssize_t *iptr = &ivec[+0]
     cdef const Py_ssize_t *hptr = &head[+0]
-
+    
 #----------------------------------- loop over polygon edges
     for epos in range(enum):
 
