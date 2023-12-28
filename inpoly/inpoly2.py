@@ -87,10 +87,11 @@ def inpoly2(vert, node, edge=None, ftol=5.0e-14):
         edge = np.asarray(edge, dtype=np.int32)
 
 #----------------------------------- prune points using bbox
-    xmin = np.nanmin(node[edge[:, 0], 0])
-    xmax = np.nanmax(node[edge[:, 0], 0])
-    ymin = np.nanmin(node[edge[:, 0], 1])
-    ymax = np.nanmax(node[edge[:, 0], 1])
+    used = edge.ravel()
+    xmin = np.nanmin(node[used, 0])
+    xmax = np.nanmax(node[used, 0])
+    ymin = np.nanmin(node[used, 1])
+    ymax = np.nanmax(node[used, 1])
     xdel = xmax - xmin
     ydel = ymax - ymin
 
