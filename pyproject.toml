@@ -1,0 +1,40 @@
+[tool.poetry]
+name = "inpoly"
+version = "0.2.1"
+description = "Fast point(s)-in-polygon queries."
+authors = ["Darren Engwirda and Keith Roberts <d.engwirda@gmail.com>"]
+homepage = "https://github.com/dengwirda/inpoly-python"
+keywords = ["Point-in-Polygon", "Geometry", "GIS"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Topic :: Scientific/Engineering :: GIS"
+]
+packages = [{ include = "inpoly" }]
+include = [
+    { path = "inpoly/**/*.so", format = "wheel" },
+    { path = "inpoly/**/*.dll", format = "wheel" },
+    { path = "inpoly/**/*.dylib", format = "wheel" }
+]
+
+[tool.poetry.dependencies]
+python = ">=3.9"
+numpy = "^1.25.2"
+
+[build-system]
+requires = ["poetry-core", "cython", "numpy", "setuptools"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.build]
+generate-setup-file = false
+script = "build.py"
+
+[tool.flake8]
+ignore = "W503,W504,E115,E265,E271,E701,E702,E704,F401"
